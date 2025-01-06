@@ -33,4 +33,19 @@ class SleepRecordsController < ApplicationController
     end
   end
 
+  def following_sleep_records
+    following_ids = @user.following.pluck(:id)
+
+    sleep_records = SleepRecord.where(user_id: following_ids)
+                               .where('clock_in >= ?', 1.week.ago)
+                               .includes(:user)
+
+    sorted_records = sleep_records.map do |record|
+      duration = record.clock_out - record.clock_in if record.clock_out
+      { user_id: record.user_id, clock_in: record.clock_in, clock_out: record.clock_out, duration: duration }
+    end.compact.sort_by { |record| record[:duration] || 0 }
+
+    render json: sorted_records
+  end
+
 end 

@@ -48,4 +48,18 @@ class SleepRecordsControllerTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
     assert_includes @response.body, 'No active sleep record found to clock out.'
   end
+
+  test "should get following sleep records sorted by duration" do
+    following_user = users(:following_user)
+    @user.following_relationships.create(followed_id: following_user.id)
+
+    following_user.sleep_records.create(clock_in: Time.current - 1.hour, clock_out: 1.day.ago + 5.hours)
+
+    get following_sleep_records_user_url(@user)
+    assert_response :success
+
+    sleep_records = JSON.parse(@response.body)
+    assert_equal 1, sleep_records.size
+    assert_equal following_user.id, sleep_records[0]['user_id']
+  end
 end

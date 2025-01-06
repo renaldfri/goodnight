@@ -17,6 +17,12 @@ Rails.application.routes.draw do
       post :clock_in, to: 'sleep_records#create'
       post :clock_out, to: 'sleep_records#update'
       get :sleep_records, to: 'sleep_records#index'
+
+      post 'follow/:target_user_id', to: 'follows#create', as: :follow 
+      delete 'follow/:target_user_id', to: 'follows#delete', as: :unfollow 
+
+      get 'follow/sleep_records', to: 'sleep_records#following_sleep_records', as: :following_sleep_records
+
     end
   end
 
