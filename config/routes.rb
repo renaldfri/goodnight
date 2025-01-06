@@ -14,9 +14,9 @@ Rails.application.routes.draw do
 
   resources :users do
     member do
-      post :clock_in
-      post :clock_out
-      get  :sleep_records
+      post :clock_in, to: 'sleep_records#create'
+      post :clock_out, to: 'sleep_records#update'
+      get :sleep_records, to: 'sleep_records#index'
     end
   end
 
