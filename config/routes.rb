@@ -12,5 +12,12 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
 
-  resources :users
+  resources :users do
+    member do
+      post :clock_in
+      post :clock_out
+      get  :sleep_records
+    end
+  end
+
 end
